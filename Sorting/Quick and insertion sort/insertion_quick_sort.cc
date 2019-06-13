@@ -70,10 +70,12 @@ void print(int*A,size_t n){
 
 
 int main(){
-    // test nel caso peggiore: prendo vettore
+    // test nel caso random
     clock_t t1;
     string file_name="quicksort_worst_case.txt";
     string second_file = "quicksort_normale_case.txt";
+    string insertion = "insertion_sort.txt";
+    string insertion_random = "random_insertion_sort.txt";
     //std::fstream ff{second_file,ff.app};
     //ff.close();
     std::fstream f{file_name,f.app};
@@ -94,7 +96,7 @@ int main(){
                 }
         }
     
-    // analisi di quick sort nel caso normale, cioè prendendo un vettore randomico
+    // analisi di quick sort nel caso peggiore
 
 for(int i{1};i<5;i++){
         for(int h{1};h<10;h = h+1){
@@ -111,8 +113,37 @@ for(int i{1};i<5;i++){
                 }
         }
     
-     
+    // analisi di insertion sort nel caso peggiore 
     
+    for(int i{1};i<5;i++){
+        for(int h{1};h<10;h = h+1){
+            //cout<<"size:   "<<h*pow(10,i)<<endl;
+            size =h*pow(10,i);
+            int* b{new int[size]};
+            for(int i = 0; i<size;i++){b[i]= size - i;}
+            t1 = clock();
+            insertion_sort(b,size);
+            t1=clock()-t1;
+            f.open(insertion,f.app);
+            f<<((float)t1)/CLOCKS_PER_SEC<<endl;
+            f.close();
+                }
+        }
+
+    // analisi di insertion sort nel caso random
+    for(int i{1};i<5;i++){
+        for(int h{1};h<10;h = h+1){
+            //cout<<"size:   "<<h*pow(10,i)<<endl;
+            size =h*pow(10,i);
+            int* b =  create_vect(size);
+            t1 = clock();
+            insertion_sort(b,size);
+            t1=clock()-t1;
+            f.open(insertion_random,f.app);
+            f<<((float)t1)/CLOCKS_PER_SEC<<endl;
+            f.close();
+                }
+        }
 	
 	return 0;
 	

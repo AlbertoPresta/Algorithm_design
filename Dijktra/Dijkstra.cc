@@ -1,17 +1,13 @@
 #include<stdlib.h>
 #include<iostream>
 #include<ctime>
-#include<fstream>
-#include<sstream>
-#include<vector>
 #include<stdio.h>
 
-using std::size_t;
+
 using std::cout;
 using std::endl;
-using std::cin;
-using std::string;
-using std::vector;
+
+
 
 // ARRAY BASED IMPLEMENTATION OF DIJKSTRA 
 #define MAX 10000  // initial distance 

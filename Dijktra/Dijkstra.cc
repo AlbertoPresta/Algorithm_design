@@ -32,12 +32,21 @@ void print(int* dist,int n ){
 		cout<<"Vertex: "<<i<<" distance from source: "<<dist[i]<<endl;
 	}
 }
+void print_predecessor(int* dist,int n){
+	for (int i=0; i<n; i++){
+		cout<<"predecessor of "<<i<<": "<<dist[i]<<endl;
+	}
+}
 
 // it receives in input the adjacency matrix and the source 
-int* Dijkstra(int* graph, int src,int n){
+int** Dijkstra(int* graph, int src,int n){
+	int** output{new int*[2]};
+	int* ancestor{new int[n]}; // ancestor[i]= predecessor of i 
+	for (int i = 0; i<n;i++){ancestor[i]=0;}
+	ancestor[src]= -1; // we set acestor of the source as -1, ideed it has no predecessors 
 	int* dist{new int[n]}; // the output dist[i] = distance of the vertex i from the source
-	bool* s{new bool[n]}; //true if vertex i is included in shortest path tree or shortest distance from src to i is finalized 
-	//initialization part
+	bool* s{new bool[n]}; //true if  distance from src to i is finalized (if we have yet discovered the minumu distance) 
+	//initialization part--> we set all vertex undiscovered and with distance equal to inifinity 
 	for(int i = 0;i<n;i++){
 		dist[i]=MAX;
 		s[i]=false;
@@ -48,7 +57,7 @@ int* Dijkstra(int* graph, int src,int n){
 	for (int i=0; i<n;i++){
 		// Pick the minimum distance vertex from the set of vertices not 
         // yet processed. u is always equal to src in the first iteration. 
-        int u = minimum_distance(dist, s,n); 
+        int u = minimum_distance(dist,s,n); 
 		s[u]=true;
 		// now we hace to update the distance vector
 		for (int v = 0; v < V; v++){
@@ -57,10 +66,14 @@ int* Dijkstra(int* graph, int src,int n){
 			// and if we improve the actuale situation 
 			if(s[v]==false && graph[u*n+v]!=0 && dist[u]!=MAX && dist[u] + graph[u*n+v]<dist[v]){
 					dist[v] = dist[u] + graph[u*n + v];
+					ancestor[v] = u;
 			}
 		}
+	
 	}
-	return dist;	
+	output[0]=dist;
+	output[1]=ancestor;
+	return output;	
 
 }
 
@@ -102,7 +115,10 @@ int main(){
 	graph[21]=2;
 	graph[23]=1;
 
-	int* distanze = Dijkstra(graph,0,5);
-	print(distanze,V);
+	int** distanze = Dijkstra(graph,0,5);
+	print(distanze[0],V);
+	cout<<"ora il vettore dei predecessori"<<endl;
+	print_predecessor(distanze[1],V);
+	cout<<endl;
 	return 0;
 }

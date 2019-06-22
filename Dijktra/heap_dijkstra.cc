@@ -38,12 +38,11 @@ struct min_heap{
     struct min_heap_node *array; 
 
     // costruttore del min_heap
-    min_heap(int cap,int dim, struct min_heap_node* a): capacity{cap} ,size{dim}{
+    min_heap(int cap,int dim, struct min_heap_node* a,int* o): capacity{cap} ,size{dim}, pos{o}{
         this->array = (struct min_heap_node*) malloc(capacity * sizeof(struct min_heap_node)); // array di nodi di min-heap
         this->array = a;
         this->build_heap();
-        this->pos = (int*)malloc(capacity*sizeof(int));
-        for(int i =0;i<capacity;i++){this->pos[i]=0;}
+        
     }
 
 // function of my struct
@@ -82,10 +81,12 @@ void minheapify(int i){
     if(smallest!=i){
         min_heap_node smallestnode = this->array[smallest];
         min_heap_node idxnode = this->array[i];
+        
         // scambiare le posizioni
-        this->pos[smallestnode.vert] = i;
+        this->pos[smallestnode.vert] = i;  // il problema è qua 
+        
         this->pos[idxnode.vert] = smallest;
-        cout<<"fuck off"<<endl;
+        
         swap(i,smallest);
         this->minheapify(smallest);
     }
@@ -99,14 +100,14 @@ void build_heap(){
     
     int i = this->size-1; // size della heap (equivalente al numero di nodi che ci sono al momento)
     while(i>=0){
-        cout<<i<<endl;
+        
         minheapify(i);
         i--;
     }
 }
 
 bool is_in_minheap(int v){
-    if (this->array[v].dist < this->size){return true;} 
+    if (this->pos[v] < this->size){return true;} 
    return false; 
 } 
 
@@ -235,13 +236,16 @@ void dijkstra(struct graph graph,int src){
     //per prima cosa creiamo un vettore di nodi della min-heap
     min_heap_node* ar =(min_heap_node*)malloc(V*sizeof(min_heap_node));
     //riempiamo l'array ar dei nodi del grafo 
-    min_heap hp{V,V,ar};
+    int *pos = (int*)malloc(7*sizeof(int));
+        for(int i =0;i<7;i++){pos[i]=0;}
+    min_heap hp{V,V,ar,pos};
     for(int v =0;v<V;v++){
         dist[v]=INT_MAX;
         min_heap_node temp{v,dist[v]};
         hp.array[v] = temp;
         hp.pos[v]=v;
     }
+
     dist[src]=0;
     min_heap_node sou{src,dist[src]};
     hp.array[src]=sou;
@@ -260,14 +264,18 @@ void dijkstra(struct graph graph,int src){
         int u = minode.vert; // estraiamo il vertice relativo 
         // attraversiamo la lista di adiacenza relativa al nostro vertice u e facciamo l'update delle distanze
         struct adjlistnode* p = graph.array[u].head;
+        
         while(p!=nullptr){
             int v = p->dest;
             // se la distanza di v non è ancora stata finalizzata e inoltre 
             // la distanza tra v e u è minore dalla distanza calcolata in precedenza, la cambiamo 
-            if(hp.is_in_minheap(v) && dist[u]!=INT_MAX && p->weight + dist[u] < dist[v]){
+           
+            if((hp.is_in_minheap(v)) && dist[u]!=INT_MAX && p->weight + dist[u] < dist[v]){
+                
                 dist[v]=dist[u] + p->weight;
                 //ora bisogna cambiare anche la minheap
                 hp.decreaseKey(v,dist[v]); // vediamo cosa fa 
+                
             }
             p = p->next;
         }
@@ -318,7 +326,7 @@ void printarray(int* d,int n){
 
 
 int main(){
-/*
+
 int V = 9;
 
 
@@ -341,8 +349,8 @@ gr.addedge(7, 8, 7);
  dijkstra(gr,0);
 
 
-*/
 
+/*
 int n = 10;
 int* a{new int[n]};
 a[0]=12;
@@ -372,12 +380,14 @@ ar[5]=cinque;
 ar[6]=sei;
 for(int i = 0;i<7;i++){ar[i].print_node();}
 
-
+int *pos = (int*)malloc(7*sizeof(int));
+        for(int i =0;i<7;i++){pos[i]=0;}
 cout<<"AAAAAAAAAAAAAAAA"<<endl;
-min_heap prova{7,7,ar};
+min_heap prova{7,7,ar,pos};
 cout<<"AAAAAAAAAAAAAAAA"<<endl;
 if(prova.ver()==false)cout<<"non va bene"<<endl;
 else cout<<"ok"<<endl;
-
+prova.print_heap();
+*/
 return 0;
 }

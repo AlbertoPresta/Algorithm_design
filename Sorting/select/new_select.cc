@@ -50,7 +50,21 @@ void quicksort(int* A,int l,int r){
 	}
 }
 	
-
+int partition_select(int* A,size_t l,size_t r,int m){ // pivot= A[l]
+    switch_el(A,l,m); // metto il pivot all'inizio e poi procedo normalmente con il partition
+    int pivot = A[l];
+    size_t i = l+1;
+	size_t j = r ;
+	while(i<=j){
+		if(pivot<A[i]){
+			switch_el(A,i,j);
+			j = j-1;
+		}
+		else{i = i+1;}
+	}
+	switch_el(A,l,j);
+	return j; // nuova posizione del pivot
+}
 
 int best_pivot(int* A,int l,int r){ // N grande è la dimensione totale
 	    
@@ -90,7 +104,7 @@ int best_pivot(int* A,int l,int r){ // N grande è la dimensione totale
 
 int select(int* A,int i, int l,int r){
     int j = best_pivot(A,l,r);
-    int k = partition(A,l,r);
+    int k = partition_select(A,l,r,j);
 	if(i==k+1){return A[k];};
 	if(i<1+k){return select(A,i,l,k-1);};
     return select(A,i,k+1,r) ;
@@ -101,12 +115,8 @@ int select(int* A,int i, int l,int r){
 
 int main(){
 
-    // prova se funziona 
+     
     int* pp = create_vect(50);
-
-   
-    
-   
     for (int i = 1; i<=50;i++){
         int prova = select(pp,i,0,50);
         cout<<endl;

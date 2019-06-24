@@ -3,7 +3,7 @@
 #include<ctime>
 #include<fstream>
 #include<sstream>
-
+#include<cmath>
 
 using std::size_t;
 using std::cout;
@@ -115,15 +115,21 @@ int select(int* A,int i, int l,int r){
 
 int main(){
 
-     
-    int* pp = create_vect(50);
-    for (int i = 1; i<=50;i++){
-        int prova = select(pp,i,0,50);
-        cout<<endl;
-        cout<<"l'elemento che si trova nella posizione "<<i<<" è: "<<prova<<endl;
+     // tempistiche
+    clock_t t1;
+    for (int i = 10; i<=10000;i=i+10){
+        
+        int* pp = create_vect(i);
+        t1 = clock();
+        int p = select(pp,1,0,i);
+        t1=clock()-t1;
+        cout<<((float)t1)/CLOCKS_PER_SEC<<endl;
+        
+       
     }
     
-
+    
+    
 
 	return 0;
 }

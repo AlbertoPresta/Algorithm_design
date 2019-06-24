@@ -1,14 +1,28 @@
 #include<stdlib.h>
 #include<iostream>
 #include<cmath>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
 #define INT_MAX 10000
 void printarray(int* d,int n);
 
-/* bisogna cotruire la classe min_heap di modo che sia sensata per l'algoritmo di DIjsktra 
- la heap però deve contenere sia il vertice che la distanza)*/
+/* bisogna cotruire la classe min_heap di modo che sia sensata per l'algoritmo di Dijsktra 
+ la heap però deve contenere sia il vertice che la distanza)
+
+La mia classe heap sarà formata:
+    -da una variabile int size = numero di min_heap_nodes presenti nella heap al momento
+    -int capacity = capacità della heap (data all'inizio)
+    -un array di interi int* pos -> salva le posizioni dei nodi nella heap (serve per il decrease key)
+    -u narray di min_heap_node dove si salvano i veri e propri nodi della heap 
+
+Si sfrutta quindi una struct ausiliaria che rappresenta il singolo nodo--> questa struct si chiama min_heap_node  e ha come variabili:
+    -int vert -> indica il vertice salvato del nodo 
+    -int dist -> indica la distanza dall'eventuale sorgente
+
+ */
 
  // struct che rappresenta un nodo della minheap
 
@@ -17,7 +31,7 @@ void printarray(int* d,int n);
      int vert; // indica il vertice
      int dist; //indica la distanza
 
-     min_heap_node(int v,int d): vert{v} , dist{d} { } 
+     min_heap_node(int v,int d): vert{v} , dist{d} { }   // semplice costruttore del nodo (riceve in input due interi -->vertice e distanza)
 
      void print_node(){
          cout<<"vertice: "<<vert<<"  valore: "<<dist<<endl;
@@ -28,12 +42,12 @@ void printarray(int* d,int n);
 
 };
 
-// 
+//  **************************** STRUCT MIN_HEAP ****************************************
 
 
 struct min_heap{
-    int size; // numero di min_heap_nodes presenti al momento
     int capacity; // capacità della heap
+    int size; // numero di min_heap_nodes presenti al momento
     int* pos; // serve per il decrease key 
     struct min_heap_node *array; 
 
@@ -58,7 +72,7 @@ struct min_heap{
     struct min_heap_node* get_array(){return this->array;}
 
 
-//in output abbiamo i due indici che rappresentano i nodi della heap da swappare
+//in output abbiamo i due indici che rappresentano i nodi della heap da swappare  --> SI SWAPPA L'INTERO NODO 
 void swap(int i,int j){
     struct min_heap_node t = (this->array[i]); 
     (this->array[i]) = (this->array[j]); 
@@ -81,12 +95,9 @@ void minheapify(int i){
     if(smallest!=i){
         min_heap_node smallestnode = this->array[smallest];
         min_heap_node idxnode = this->array[i];
-        
         // scambiare le posizioni
-        this->pos[smallestnode.vert] = i;  // il problema è qua 
-        
+        this->pos[smallestnode.vert] = i;  
         this->pos[idxnode.vert] = smallest;
-        
         swap(i,smallest);
         this->minheapify(smallest);
     }
@@ -100,7 +111,6 @@ void build_heap(){
     
     int i = this->size-1; // size della heap (equivalente al numero di nodi che ci sono al momento)
     while(i>=0){
-        
         minheapify(i);
         i--;
     }
@@ -111,10 +121,11 @@ bool is_in_minheap(int v){
    return false; 
 } 
 
+// funzione che serve per estrarre il minimo dalla heap 
 struct min_heap_node extractmin(){
     if (this->isEmpty()==true){
         struct min_heap_node null{0,0};
-        return null; // in attesa delle eccezioni
+        return null; 
     } 
     struct min_heap_node root = this->array[0];
     swap(0,this->size-1); // swap the root node with the last position of minheap
@@ -124,6 +135,8 @@ struct min_heap_node extractmin(){
     return root;
 }
 
+
+// helper function per stampare la nostra heap 
 void print_heap(){
     for(int i=0;i<this->size; i++){
          cout<<"vertice: "<<this->array[i].vert<<" distanza "<<this->array[i].dist<<" pos "<<this->pos[i]<<endl; 
@@ -131,7 +144,7 @@ void print_heap(){
     }
 }
 
-
+// verifica che la heap rispetti sempre la condizione di min_heap
 bool ver(){
 for(int i =0;i<this->size;i++){
     if(this->array[parent(i)].dist >  this->array[i].dist) return false;
@@ -159,7 +172,23 @@ void decreaseKey(int v,int dist){
 
 };
     
-    
+
+
+ //*********************** RAPPRESENTAZIONE DEL GRAFO *************************************************
+
+ /*
+il nostro grafo avrà come variabili:
+    - un intero int v che rappresenta il numero di vertici 
+    - una lista di adiacenza, la quale è rappresentata da un pointer alla testa di questa lista 
+    -ogni nodo della lista è rappresentato dalla struct adjlistnode, la quale ha le seguenti variabili:
+            -int dest ->prossimo vertice
+            -int weight -> peso dell+arco
+            -pointer al porssimo nodo 
+
+
+
+
+ */   
 
   
 
@@ -196,6 +225,8 @@ struct adjlist
 { 
     struct adjlistnode *head;  // pointer to head node of list 
 }; 
+
+// vera e propria struct graph, con il metodo addedge 
 
 struct graph{
 
@@ -250,9 +281,6 @@ void dijkstra(struct graph graph,int src){
     min_heap_node sou{src,dist[src]};
     hp.array[src]=sou;
     hp.decreaseKey(src,dist[src]);
-    cout<<"PRINT THE HEAP"<<endl;
-    hp.print_heap();
-    
     // ora abbiamo il vettore con i nodi della heap---> creare una min-heap
     //min_heap hp{v,v,ar};
 
@@ -327,7 +355,7 @@ void printarray(int* d,int n){
 
 int main(){
 
-int V = 9;
+
 
 
 struct graph  gr{9}; 
@@ -345,49 +373,57 @@ gr.addedge(5, 6, 2);
 gr.addedge(6, 7, 1); 
 gr.addedge(6, 8, 6); 
 gr.addedge(7, 8, 7); 
-
+clock_t begin = clock();
  dijkstra(gr,0);
+clock_t end = clock();
+cout<<"computed time for a graph of dimension "<<9<<"  is  "<<double(end - begin) / CLOCKS_PER_SEC<<endl;
 
+int V_long = 30;
+    	graph* graph_big = new graph(V_long);
+    	graph_big->addedge(0, 1, 4);
+    	graph_big->addedge(0, 7, 8);
+    	graph_big->addedge(1, 2, 8);
+    	graph_big->addedge(1, 7, 11);
+    	graph_big->addedge(2, 3, 7);
+    	graph_big->addedge(2, 8, 2);
+    	graph_big->addedge(2, 5, 4);
+    	graph_big->addedge(3, 4, 9);
+    	graph_big->addedge(3, 5, 14);
+    	graph_big->addedge(4, 5, 10);
+    	graph_big->addedge(5, 6, 2);
+    	graph_big->addedge(6, 7, 1);
+    	graph_big->addedge(6, 8, 6);
+    	graph_big->addedge(7, 8, 7);
+    	graph_big->addedge(8, 11, 3);
+    	graph_big->addedge(8, 9, 7);
+    	graph_big->addedge(9, 10, 4);
+    	graph_big->addedge(10, 14, 7);
+    	graph_big->addedge(10, 11, 17);
+    	graph_big->addedge(11, 14, 5);
+    	graph_big->addedge(11, 12, 8);
+    	graph_big->addedge(12, 13, 4);
+    	graph_big->addedge(13, 14, 7);
+   	graph_big->addedge(14, 16, 7);
+    	graph_big->addedge(14, 15, 6);
+    	graph_big->addedge(15, 16, 9);
+    	graph_big->addedge(16, 17, 8);
+    	graph_big->addedge(17, 19, 2);
+    	graph_big->addedge(18, 21, 5);
+    	graph_big->addedge(19, 22, 7);
+	graph_big->addedge(20, 22, 7);
+    	graph_big->addedge(21, 23, 4);
+    	graph_big->addedge(22, 26, 6);
+    	graph_big->addedge(23, 25, 9);
+    	graph_big->addedge(24, 27, 8);
+    	graph_big->addedge(25, 26, 2);
+    	graph_big->addedge(26, 28, 7);
+    	graph_big->addedge(26, 27, 6);
+    	graph_big->addedge(27, 28, 9);
+    	graph_big->addedge(28, 29, 8);
+	clock_t begin_1 = clock();
+	dijkstra(*graph_big, 0);
+	clock_t end_1 = clock();
+cout<<"computed time for a graph of dimension "<<30<<"  is  "<<double(end_1 - begin_1) / CLOCKS_PER_SEC<<endl;
 
-
-/*
-int n = 10;
-int* a{new int[n]};
-a[0]=12;
-a[1]=2;
-a[2]=1;
-
-for(int i=3; i<n;i++){a[i]=rand()%100 +1;}
-
-
-
-min_heap_node zero{0,2};
-min_heap_node uno{1,4};
-min_heap_node due{2,5};
-min_heap_node tre{3,1};
-min_heap_node quattro{4,0};
-min_heap_node cinque{5,7};
-min_heap_node sei{6,3};
-
-
-min_heap_node* ar =(min_heap_node*)malloc(7*sizeof(min_heap_node)); 
-ar[0]=zero;
-ar[1]=uno;
-ar[2]=due;
-ar[3]=tre;
-ar[4]=quattro;
-ar[5]=cinque;
-ar[6]=sei;
-for(int i = 0;i<7;i++){ar[i].print_node();}
-
-int *pos = (int*)malloc(7*sizeof(int));
-        for(int i =0;i<7;i++){pos[i]=0;}
-cout<<"AAAAAAAAAAAAAAAA"<<endl;
-min_heap prova{7,7,ar,pos};
-cout<<"AAAAAAAAAAAAAAAA"<<endl;
-if(prova.ver()==false)cout<<"non va bene"<<endl;
-else cout<<"ok"<<endl;
-prova.print_heap();
-*/
 return 0;
 }

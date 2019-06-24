@@ -29,7 +29,7 @@ class heap{
     T* hp{new T[dim_array]};
     
 
-    // constructor: it receives in input an integer and an array of values
+    
 public:
     void swap(int i ,int j){
         T temp = this->hp[i];
@@ -64,7 +64,7 @@ public:
     
     
     
-
+// constructor: it receives in input an integer and an array of values
     heap(int dim,T* a ):dim_array{dim},dim_heap{dim},hp{a} {
         // transform the array in a heap
         build_heap(); // function to be defined
@@ -130,7 +130,9 @@ void heapsort(T* a,int n){
 
 
 int main(){
-     //srand(time(NULL));
+
+
+     
     clock_t t1;
     string file_name="heapsort.txt";
     size_t size;

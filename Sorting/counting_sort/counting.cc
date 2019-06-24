@@ -49,18 +49,7 @@ void counting_sort(int* A,int* B,int k,int n){
  } 
  
  int main(){
-	 /*
-	 int* a{new int[10000]};
-	 for(int i=0;i<10000;i++){a[i]=rand()%100+1;}
-	 //for(int i=0;i<100;i++){cout<<a[i]<<" ";}
-	 cout<<endl;
-	 int max = find_max(a,10000);
-	 int* b{new int[10000]};
-	 counting_sort(a,b,max,10000);
-	 //for(int i=0;i<100;i++){cout<<a[i]<<" ";}
-	 cout<<endl;
 	 
-	*/
 	 string file_name="counting_sort.txt";
 	 clock_t t1;
 	 std::fstream f{file_name,f.app};

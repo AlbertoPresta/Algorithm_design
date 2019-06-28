@@ -160,7 +160,7 @@ int main(){
     
     // analisi di quick sort nel caso peggiore
 
-for(int i{1};i<5;i++){
+for(int i{1};i<4;i++){
         for(int h{1};h<10;h = h+1){
             //cout<<"size:   "<<h*pow(10,i)<<endl;
             size =h*pow(10,i);

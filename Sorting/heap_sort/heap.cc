@@ -127,6 +127,15 @@ void heapsort(T* a,int n){
     for(int i = 0; i<n;i++){a[i]=a_hp.get_array()[i];}
 }
 
+template<typename T>
+bool verify(T* a,int n){
+    for(int i=0;i<n-1;i++){
+       if(a[i]>a[i+1]) {return false;};
+        
+    }
+return true;
+}
+
 
 
 int main(){
@@ -141,13 +150,12 @@ int main(){
     for(int i{1};i<7;i++){
         for(int h{1};h<10;h = h+1){
             size =h*pow(10,i);
-            
             int* b{new int[size]};
             for (int i = 0; i<size;i++){b[i]=rand()%100 +1;}
             t1 = clock();
             heapsort(b,size);
             t1=clock()-t1;
-            
+            if(verify(b,size)==false){cout<<"problema"<<endl;}
             f.open(file_name,f.app);
             f<<((float)t1)/CLOCKS_PER_SEC<<endl;
             f.close();

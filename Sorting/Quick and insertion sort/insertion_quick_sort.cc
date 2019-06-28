@@ -107,7 +107,7 @@ int best_pivot(int* A,int l,int r){
 
 
 int best_partition(int* A,size_t l,size_t r){ 
-	int pivot = A[(l+r)/2];
+	int pivot = A[(l+r)/2 + l];
     size_t i = l+1;
 	size_t j = r ;
 	while(i<=j){
@@ -124,9 +124,9 @@ int best_partition(int* A,size_t l,size_t r){
 
 void best_quicksort(int* A,int l,int r){
 	if(l<r){
-		int p = partition(A,l,r);
-        quicksort(A,l,p-1);
-		quicksort(A,p+1,r);
+		int p = best_partition(A,l,r);
+        best_quicksort(A,l,p-1);
+		best_quicksort(A,p+1,r);
 	}
 }
 
@@ -148,7 +148,7 @@ int main(){
     std::fstream f{file_name,f.app};
     f.close();
     int size;
-  /* 
+  
     for(int i{1};i<5;i++){
         for(int h{1};h<10;h = h+1){
             //cout<<"size:   "<<h*pow(10,i)<<endl;
@@ -213,7 +213,7 @@ for(int i{1};i<5;i++){
             f.close();
                 }
         }
-    
+   
     
     cout<<"BEST QUICKSORT"<<endl;
     // quick sort nel caso migliore
@@ -230,7 +230,7 @@ for(int i{1};i<5;i++){
             f.close();
                 }
         }
-*/
+
     cout<<"best insertion sort"<<endl;
     for(int i{1};i<5;i++){
         for(int h{1};h<10;h = h+1){
@@ -246,7 +246,7 @@ for(int i{1};i<5;i++){
                 }
         }
 
-	
+
 	return 0;
 	
 }

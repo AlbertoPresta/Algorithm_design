@@ -69,7 +69,9 @@ void print(int*A,size_t n){
 }
 
 
-// ora scrivo degli algoritmi per il caso migliore (quicksort)
+
+
+
 int best_pivot(int* A,int l,int r){ 
 	    
         int len = r-l;
@@ -105,7 +107,7 @@ int best_pivot(int* A,int l,int r){
 
 
 int best_partition(int* A,size_t l,size_t r){ 
-	int pivot = best_pivot(A,l,r);
+	int pivot = A[(l+r)/2];
     size_t i = l+1;
 	size_t j = r ;
 	while(i<=j){
@@ -129,6 +131,8 @@ void best_quicksort(int* A,int l,int r){
 }
 
 
+
+
 int main(){
     // test nel caso random
     clock_t t1;
@@ -137,12 +141,14 @@ int main(){
     string insertion = "insertion_sort.txt";
     string insertion_random = "random_insertion_sort.txt";
     string best = "best_quicksort.txt";
+    string best_insertion = "best_insertion_sort.txt";
+
     //std::fstream ff{second_file,ff.app};
     //ff.close();
     std::fstream f{file_name,f.app};
     f.close();
-    size_t size =pow(10,5);
-    
+    int size;
+  /* 
     for(int i{1};i<5;i++){
         for(int h{1};h<10;h = h+1){
             //cout<<"size:   "<<h*pow(10,i)<<endl;
@@ -160,7 +166,7 @@ int main(){
     
     // analisi di quick sort nel caso peggiore
 
-for(int i{1};i<4;i++){
+for(int i{1};i<5;i++){
         for(int h{1};h<10;h = h+1){
             //cout<<"size:   "<<h*pow(10,i)<<endl;
             size =h*pow(10,i);
@@ -207,14 +213,15 @@ for(int i{1};i<4;i++){
             f.close();
                 }
         }
- 
+    
+    
     cout<<"BEST QUICKSORT"<<endl;
     // quick sort nel caso migliore
     for(int i{1};i<5;i++){
         for(int h{1};h<10;h = h+1){
-            //cout<<"size:   "<<h*pow(10,i)<<endl;
             size =h*pow(10,i);
-            int* b = create_vect(size);
+            int* b{new int[size]};
+            for(int q =0; q<size;q++){b[i]=i;}
             t1 = clock();
             best_quicksort(b,0,size);
             t1=clock()-t1;
@@ -223,7 +230,21 @@ for(int i{1};i<4;i++){
             f.close();
                 }
         }
-
+*/
+    cout<<"best insertion sort"<<endl;
+    for(int i{1};i<5;i++){
+        for(int h{1};h<10;h = h+1){
+            size =h*pow(10,i);
+            int* b{new int[size]};
+            for(int q =0; q<size;q++){b[i]=i;}
+            t1 = clock();
+            insertion_sort(b,size);
+            t1=clock()-t1;
+            f.open(best_insertion,f.app);
+            f<<((float)t1)/CLOCKS_PER_SEC<<endl;
+            f.close();
+                }
+        }
 
 	
 	return 0;

@@ -232,8 +232,8 @@ struct graph{
 
     int v; // numeber of vertices
     struct adjlist*  array; // la nostra lista di adiacenza 
-
-    graph(int v): v{v}{
+    bool direct; // se è true---> grafo è diretto, altrimento è indiretto
+    graph(int v,bool b): v{v}, direct{b}{
         // allochiamo memoria per l'array di liste di adiacenza
         this->array = (struct adjlist*) malloc(v*sizeof(struct adjlist));
         // inizializziamo tutt le liste di adiacenza vuote
@@ -248,10 +248,16 @@ struct graph{
         this->array[src].head = newnode;
 
         // creiamo un grafo indiretto per ora
-        struct adjlistnode* newnode2 = newadjlistnode(src,weight);
-        newnode2->next = this->array[dest].head;
-        this->array[dest].head = newnode2;
+        if(this->direct==false){
+            struct adjlistnode* newnode2 = newadjlistnode(src,weight);
+            newnode2->next = this->array[dest].head;
+            this->array[dest].head = newnode2;
+        }
     }
+
+    
+
+    
     
 };
 
@@ -308,7 +314,7 @@ void dijkstra(struct graph graph,int src){
             p = p->next;
         }
     }
-    printarray(dist,V);
+    //printarray(dist,V);
 
 }
 
@@ -322,11 +328,32 @@ void printarray(int* d,int n){
     }
 }
 
+bool equal_edges(adjlistnode* a,adjlistnode* b){
+    if(a->dest==b->dest & a->next==b->next){return true;}
+    else return false;
+}
 
-
-
-
-
+// questo crea un multigrafo
+graph* create_graph(int V,int E,bool b){
+     graph* gr = new graph(V,b);
+     int div;
+     int i = 0;
+     
+    while(i<V-1){
+        if (i ==0){div =  E/V + E/V;}
+        else{div = E/V;}
+        for(int u=0;u<div;u++){
+            int arr = i + rand()%(V-i);
+            if(arr==i & i<V-1){arr++;};
+            int peso = rand()%100 +1;
+            gr->addedge(i,arr,peso);
+            
+        }
+        i = i+1;
+    }
+    
+    return gr;
+}
 
 
 
@@ -354,11 +381,13 @@ void printarray(int* d,int n){
 
 
 int main(){
+// provo a creare random un grafo
+
+graph* prova = create_graph(10,20,false);
+dijkstra(*prova,0);
 
 
-
-
-struct graph  gr{9}; 
+struct graph  gr{9,false}; 
 gr.addedge(0,1,4);
 gr.addedge(0,7,8);
 gr.addedge(1,2,8);
@@ -372,58 +401,42 @@ gr.addedge(4, 5, 10);
 gr.addedge(5, 6, 2); 
 gr.addedge(6, 7, 1); 
 gr.addedge(6, 8, 6); 
-gr.addedge(7, 8, 7); 
+gr.addedge(7, 8, 7);
+ 
 clock_t begin = clock();
  dijkstra(gr,0);
 clock_t end = clock();
 cout<<"computed time for a graph of dimension "<<9<<"  is  "<<double(end - begin) / CLOCKS_PER_SEC<<endl;
 
-int V_long = 30;
-    	graph* graph_big = new graph(V_long);
-    	graph_big->addedge(0, 1, 4);
-    	graph_big->addedge(0, 7, 8);
-    	graph_big->addedge(1, 2, 8);
-    	graph_big->addedge(1, 7, 11);
-    	graph_big->addedge(2, 3, 7);
-    	graph_big->addedge(2, 8, 2);
-    	graph_big->addedge(2, 5, 4);
-    	graph_big->addedge(3, 4, 9);
-    	graph_big->addedge(3, 5, 14);
-    	graph_big->addedge(4, 5, 10);
-    	graph_big->addedge(5, 6, 2);
-    	graph_big->addedge(6, 7, 1);
-    	graph_big->addedge(6, 8, 6);
-    	graph_big->addedge(7, 8, 7);
-    	graph_big->addedge(8, 11, 3);
-    	graph_big->addedge(8, 9, 7);
-    	graph_big->addedge(9, 10, 4);
-    	graph_big->addedge(10, 14, 7);
-    	graph_big->addedge(10, 11, 17);
-    	graph_big->addedge(11, 14, 5);
-    	graph_big->addedge(11, 12, 8);
-    	graph_big->addedge(12, 13, 4);
-    	graph_big->addedge(13, 14, 7);
-   	graph_big->addedge(14, 16, 7);
-    	graph_big->addedge(14, 15, 6);
-    	graph_big->addedge(15, 16, 9);
-    	graph_big->addedge(16, 17, 8);
-    	graph_big->addedge(17, 19, 2);
-    	graph_big->addedge(18, 21, 5);
-    	graph_big->addedge(19, 22, 7);
-	graph_big->addedge(20, 22, 7);
-    	graph_big->addedge(21, 23, 4);
-    	graph_big->addedge(22, 26, 6);
-    	graph_big->addedge(23, 25, 9);
-    	graph_big->addedge(24, 27, 8);
-    	graph_big->addedge(25, 26, 2);
-    	graph_big->addedge(26, 28, 7);
-    	graph_big->addedge(26, 27, 6);
-    	graph_big->addedge(27, 28, 9);
-    	graph_big->addedge(28, 29, 8);
+/*
 	clock_t begin_1 = clock();
 	dijkstra(*graph_big, 0);
 	clock_t end_1 = clock();
 cout<<"computed time for a graph of dimension "<<30<<"  is  "<<double(end_1 - begin_1) / CLOCKS_PER_SEC<<endl;
+
+*/
+// timing 
+string dij = "dij.txt";
+std::fstream f{dij,f.app};
+f.close();
+
+for(int i{1};i<4;i++){
+        for(int h{1};h<10;h = h+1){
+
+            int size =h*pow(10,i);
+            cout<<size<<endl;
+            graph* gr = create_graph(size,10*size,false);
+            clock_t begin_1 = clock();
+            dijkstra(*gr,0);
+            clock_t end_1 = clock();
+            f.open(dij,f.app);
+            f<<((float)(end_1-begin_1))/CLOCKS_PER_SEC<<endl;
+            f.close();
+        }
+}
+
+
+
 
 return 0;
 }

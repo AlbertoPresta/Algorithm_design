@@ -5,6 +5,9 @@
 #include<sstream>
 #include<cmath>
 
+
+int rep_partition_select(int* A,int l,int r,int m);
+
 using std::size_t;
 using std::cout;
 using std::endl;
@@ -113,7 +116,59 @@ int select(int* A,int i, int l,int r){
 
 
 
+/*
+************** DEALING WITH REPEATED VALUE *********************
+Actually, select algorithm works with repeated value, but the performance decreases a lot, especially when 
+there are values equal to the pivot--> it creates unbalancing  in partition.
+How do resolve this problem? with a boolean flag jump:
+    -if jump is true, then the equal value is positioned to the left of the pivot (we don't do the switch)
+    -if jump is false, then th equal value is positine d to the right of the pivot (we DO the switch)
+*/
+
+int rep_partition_select(int* A,int l,int r,int m){
+    switch_el(A,l,m); // metto il pivot all'inizio e poi procedo normalmente con il partition
+    int pivot = A[l];
+    size_t i = l+1;
+	size_t j = r ;
+    bool jump = true;  // if jump is true--> we put equal values on the left; otherwise on the right
+	while(i<=j){
+        if(A[i]==pivot){jump = !jump;};
+		if(pivot<A[i] || (A[i]==pivot && jump==false)){
+			switch_el(A,i,j);
+			j = j-1;
+		}
+		else{i = i+1;}
+	}
+	switch_el(A,l,j);
+	return j; // nuova posizione del pivot
+}
+
+int rep_select(int* A,int i, int l,int r){
+    int j = best_pivot(A,l,r);
+    int k = rep_partition_select(A,l,r,j);
+	if(i==k+1){return A[k];};
+	if(i<1+k){return rep_select(A,i,l,k-1);};
+    return rep_select(A,i,k+1,r) ;
+	
+}
+
+
+
 int main(){
+
+    // verifica che il rep_select funzioni 
+    int* alpha{new int[10]};
+    for(int i = 0; i<5;i++){
+        alpha[i]=rand()%100 + 1;
+        alpha[9-i] = alpha[i];
+    }
+    for(int i = 0;i<10;i++){cout<<alpha[i]<<" ";}
+    cout<<endl;
+    for(int j = 1; j <=10;j++){
+        int p = rep_select(alpha,j,0,10);
+        cout<<"alla "<<j<<" posizione si trova"<<p<<endl;
+    }
+
 
      // tempistiche
     clock_t t1;

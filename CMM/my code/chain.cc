@@ -183,13 +183,12 @@ void timer(){
 
 
 int main(){
-    cout<<"aaaaaaaa"<<endl;
+    
     matrix A = new matrix{4,3};
     matrix B = new matrix{3,6};
     matrix C = new matrix{6,5};
     matrix D = new matrix{5,4};
     matrix E = new matrix{5,4};
-    cout<<"riempimento automatico"<<endl;
     A.random_fill(50);
     B.random_fill(50);
     C.random_fill(50);

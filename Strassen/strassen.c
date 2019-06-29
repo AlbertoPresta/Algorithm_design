@@ -96,12 +96,14 @@ void strassen_aux(float **C, const size_t C_f_row, const size_t C_f_col,
   const size_t B2X = B_f_row + n2;
   const size_t BX1 = B_f_col;
   const size_t BX2 = B_f_col + n2;
+
+  // passo da allocare 10 matrici ad allocarne solo 2!
   float ***S=(float ***)malloc(sizeof(float **)*2);
 
   for (int i=0; i<2; i++) {
     S[i] = allocate_matrix(n2, n2);
   }
-
+ // passo da allocare 7 matrici ad allocarne solo 4!
   float ***P=(float ***)malloc(sizeof(float **)*4);
   for (int i=0; i<4; i++) {
     P[i] = allocate_matrix(n2, n2);

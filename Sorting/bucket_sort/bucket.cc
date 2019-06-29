@@ -117,44 +117,23 @@ int main(){
     string file_name="bucket_sort.txt";
     clock_t t1;
 	std::fstream f{file_name,f.app};
-    int tent = 1;
-    for (int i = 20; i<100;i=i+20){
-        cout<<i<<endl;
-        cout<<"tentativo:  "<<tent<<endl;
-        double* a = create_vect(i);
-       // cout<<"PROVA CHE FUNZIONA"<<endl;
-    //for(int i =0;i<10;++i){cout<<a[i]<<" ";}
-        cout<<endl;
-        t1 = clock();
-        bucket_sort(a,i);
-        t1=clock()-t1;
-        f.open(file_name,f.app);
-        f<<i<<"         "<<((float)t1)/CLOCKS_PER_SEC<<endl;
-        f.close();
-        
-        tent++;
-    }
-    /*
-    string file_name="bucket_sort.txt";
-	clock_t t1;
-	std::fstream f{file_name,f.app};
-	size_t size = 5;
-	while(size<45){
-        cout<<"inizio:  "<<size<<endl;
-        double* da{new double[size]};
-	    for (int i = 0; i<size; i++){da[i]=(double)(rand()%1000 +1)/1000;}
+    
+    
+	for(int i{10};i<105;i=i+5){
+        double* da{new double[i]};
+	    for (int j = 0; j<i; j++){da[j]=(double)(rand()%1000 +1)/1000;}
 		t1 = clock();
-        bucket_sort(da,size);
+        bucket_sort(da,i);
         t1=clock()-t1;
         f.open(file_name,f.app);
-        f<<size<<"         "<<((float)t1)/CLOCKS_PER_SEC<<endl;
+        f<<((float)t1)/CLOCKS_PER_SEC<<endl;
         f.close();
-        size = size+5;
-        cout<<"fine"<<endl;
+        cout<<i<<endl;
 		delete[] da;
-    }   
+    }  
+    
         
-*/
+
 
     return 0;
 }

@@ -51,22 +51,25 @@ void counting_sort(int* A,int* B,int k,int n){
  int main(){
 	 
 	 string file_name="counting_sort.txt";
+	 string dom = "array.txt";
 	 clock_t t1;
 	 std::fstream f{file_name,f.app};
 	 size_t size;
 	 for(int i{1};i<7;i++){
         for(int h{1};h<10;h = h+1){
 			//cout<<"ciao"<<endl;
-            
             size =h*pow(10,i);
-            int* a = create_vect(size);
+            f.open(dom,f.app);
+            f<<size<<endl;
+            f.close();
+			int* a = create_vect(size);
 			int* b{new int[size]};
 			int max = find_max(a,size);
             t1 = clock();
             counting_sort(a,b,max,size);
             t1=clock()-t1;
             f.open(file_name,f.app);
-            f<<size<<"         "<<((float)t1)/CLOCKS_PER_SEC<<endl;
+            f<<((float)t1)/CLOCKS_PER_SEC<<endl;
             f.close();
 			delete[] a;
 			delete[] b;

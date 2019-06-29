@@ -79,16 +79,17 @@ int main(){
     
     clock_t t1,t2;
     string file_name="radix.txt";
+    string asse_x = "asse_x.txt";
     std::fstream f{file_name,f.app};
     f.close();
     size_t size;
     for(int i{0};i<8;i++){
-        f.open(file_name,f.app);
-        f<<"potenza:  "<<pow(10,i)<<endl;
-        f.close();
         for(int h{1};h<10;h = h+1){
             
             size = h*pow(10,i);
+             f.open(asse_x,f.app);
+             f<<size<<endl;
+             f.close();
             int* prova = rad_create_vect(size);
             t1 = clock();
             radix_sort(prova,size);

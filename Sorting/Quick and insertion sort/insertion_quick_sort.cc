@@ -148,7 +148,7 @@ int main(){
     std::fstream f{file_name,f.app};
     f.close();
     int size;
-  /*
+  
     for(int i{1};i<5;i++){
         for(int h{1};h<10;h = h+1){
             //cout<<"size:   "<<h*pow(10,i)<<endl;
@@ -214,23 +214,9 @@ for(int i{1};i<5;i++){
                 }
         }
    
-    */
-    cout<<"BEST QUICKSORT"<<endl;
-    // quick sort nel caso migliore
-    for(int i{1};i<5;i++){
-        for(int h{1};h<10;h = h+1){
-            size =h*pow(10,i);
-            int* b{new int[size]};
-            for(int q =0; q<size;q++){b[i]=i;}
-            t1 = clock();
-            best_quicksort(b,0,size);
-            t1=clock()-t1;
-            f.open(best,f.app);
-            f<<((float)t1)/CLOCKS_PER_SEC<<endl;
-            f.close();
-                }
-        }
-/*
+    
+   
+
     cout<<"best insertion sort"<<endl;
     for(int i{1};i<5;i++){
         for(int h{1};h<10;h = h+1){
@@ -246,7 +232,7 @@ for(int i{1};i<5;i++){
                 }
         }
 
-*/
+
 	return 0;
 	
 }

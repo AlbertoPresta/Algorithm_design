@@ -2,11 +2,13 @@
 #include<iostream>
 #include<ctime>
 #include<stdio.h>
-
+#include <fstream>
+#include <string>
+#include<cmath>
 
 using std::cout;
 using std::endl;
-
+using std::string;
 
 
 // ARRAY BASED IMPLEMENTATION OF DIJKSTRA 
@@ -81,9 +83,24 @@ int** Dijkstra(int* graph, int src,int n){
 
 
 
+// function which create automatically graphs
 
 
 
+int* create_graph(int Ve,int prob){
+	int* res{new int[Ve*Ve]};
+	for (int i=0;i<Ve;i++){
+		for(int j = 0; j<Ve;j++){
+			if(i==j){res[i*Ve + j ]=0;};
+			int moneta = rand()%100;
+			if(moneta > prob/2 && moneta< 100 - prob/2){
+				res[i*Ve+j]=rand()%100 + 1;
+			}
+			else{res[i*Ve+j]=0;}
+		}
+	}
+	return res;
+}
 
 
 
@@ -120,5 +137,29 @@ int main(){
 	cout<<"ora il vettore dei predecessori"<<endl;
 	print_predecessor(distanze[1],V);
 	cout<<endl;
+
+	
+
+
+	// timing 
+	
+	string array_dij = "array_dij.txt";
+	std::fstream f{array_dij,f.app};
+	f.close();
+	for(int i{1};i<4;i++){
+        for(int h{1};h<10;h = h+1){
+
+            int size =h*pow(10,i);
+            int* gr = create_graph(size,60);
+            clock_t begin_1 = clock();
+            Dijkstra(gr,0,size);
+            clock_t end_1 = clock();
+            f.open(array_dij,f.app);
+            f<<((float)(end_1-begin_1))/CLOCKS_PER_SEC<<endl;
+            f.close();
+        }
+}
+
+
 	return 0;
 }

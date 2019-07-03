@@ -328,10 +328,7 @@ void printarray(int* d,int n){
     }
 }
 
-bool equal_edges(adjlistnode* a,adjlistnode* b){
-    if(a->dest==b->dest & a->next==b->next){return true;}
-    else return false;
-}
+
 
 // questo crea un multigrafo
 graph* create_graph(int V,int E,bool b){

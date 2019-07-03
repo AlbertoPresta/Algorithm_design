@@ -179,7 +179,7 @@ void decreaseKey(int v,int dist){
  /*
 il nostro grafo avrà come variabili:
     - un intero int v che rappresenta il numero di vertici 
-    - una lista di adiacenza, la quale è rappresentata da un pointer alla testa di questa lista 
+    - una lista di adiacenza, la quale è rappresentata da un pointer.
     -ogni nodo della lista è rappresentato dalla struct adjlistnode, la quale ha le seguenti variabili:
             -int dest ->prossimo vertice
             -int weight -> peso dell+arco
@@ -247,7 +247,7 @@ struct graph{
         newnode->next = this->array[src].head;
         this->array[src].head = newnode;
 
-        // creiamo un grafo indiretto per ora
+        // se il grafo è indiretto 
         if(this->direct==false){
             struct adjlistnode* newnode2 = newadjlistnode(src,weight);
             newnode2->next = this->array[dest].head;
@@ -267,14 +267,12 @@ void dijkstra(struct graph graph,int src){
 
     int V = graph.v;
     int* dist{new int[V]}; // questo sarà il nostro vettore di output
-    //for (int i =0;i<v;i++){dist[i] = INT_MAX;} 
-    //dist[src]=0;
     // creare la minheap con gli elementi del grafo 
     //per prima cosa creiamo un vettore di nodi della min-heap
     min_heap_node* ar =(min_heap_node*)malloc(V*sizeof(min_heap_node));
     //riempiamo l'array ar dei nodi del grafo 
-    int *pos = (int*)malloc(7*sizeof(int));
-        for(int i =0;i<7;i++){pos[i]=0;}
+    int *pos = (int*)malloc(V*sizeof(int));
+        for(int i =0;i<V;i++){pos[i]=0;}
     min_heap hp{V,V,ar,pos};
     for(int v =0;v<V;v++){
         dist[v]=INT_MAX;
@@ -380,8 +378,7 @@ graph* create_graph(int V,int E,bool b){
 int main(){
 // provo a creare random un grafo
 
-graph* prova = create_graph(10,20,false);
-dijkstra(*prova,0);
+
 
 
 struct graph  gr{9,false}; 
@@ -405,13 +402,7 @@ clock_t begin = clock();
 clock_t end = clock();
 cout<<"computed time for a graph of dimension "<<9<<"  is  "<<double(end - begin) / CLOCKS_PER_SEC<<endl;
 
-/*
-	clock_t begin_1 = clock();
-	dijkstra(*graph_big, 0);
-	clock_t end_1 = clock();
-cout<<"computed time for a graph of dimension "<<30<<"  is  "<<double(end_1 - begin_1) / CLOCKS_PER_SEC<<endl;
 
-*/
 // timing 
 string dij = "dij.txt";
 std::fstream f{dij,f.app};
@@ -421,7 +412,7 @@ for(int i{1};i<4;i++){
         for(int h{1};h<10;h = h+1){
 
             int size =h*pow(10,i);
-            cout<<size<<endl;
+            
             graph* gr = create_graph(size,10*size,false);
             clock_t begin_1 = clock();
             dijkstra(*gr,0);

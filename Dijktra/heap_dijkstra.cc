@@ -267,7 +267,7 @@ void dijkstra(struct graph graph,int src){
 
     int V = graph.v;
     int* dist{new int[V]}; // questo sarà il nostro vettore di output
-    // creare la minheap con gli elementi del grafo 
+    // creare la minheap con gli elementi del grafo (MIN_HEAP HP)
     //per prima cosa creiamo un vettore di nodi della min-heap
     min_heap_node* ar =(min_heap_node*)malloc(V*sizeof(min_heap_node));
     //riempiamo l'array ar dei nodi del grafo 
@@ -285,8 +285,7 @@ void dijkstra(struct graph graph,int src){
     min_heap_node sou{src,dist[src]};
     hp.array[src]=sou;
     hp.decreaseKey(src,dist[src]);
-    // ora abbiamo il vettore con i nodi della heap---> creare una min-heap
-    //min_heap hp{v,v,ar};
+    
 
     // ora iniziamo con il while loop che finirà quando tutti i nodi saranno stati raggiunti
     // all'inizio ,la nostra minheap contiene tutti i nodi
@@ -300,19 +299,19 @@ void dijkstra(struct graph graph,int src){
         while(p!=nullptr){
             int v = p->dest;
             // se la distanza di v non è ancora stata finalizzata e inoltre 
-            // la distanza tra v e u è minore dalla distanza calcolata in precedenza, la cambiamo 
+            // la distanza tra v e u è minore dalla distanza calcolata in precedenza, la cambiamo (relaxation)
            
             if((hp.is_in_minheap(v)) && dist[u]!=INT_MAX && p->weight + dist[u] < dist[v]){
                 
                 dist[v]=dist[u] + p->weight;
                 //ora bisogna cambiare anche la minheap
-                hp.decreaseKey(v,dist[v]); // vediamo cosa fa 
+                hp.decreaseKey(v,dist[v]); 
                 
             }
             p = p->next;
         }
     }
-    //printarray(dist,V);
+    
 
 }
 

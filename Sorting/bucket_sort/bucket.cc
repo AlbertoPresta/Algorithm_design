@@ -49,6 +49,8 @@ void double_insertion_sort(double* A,size_t n){
  
  
  
+ // funzione che mi restituisce il numero di elementi che ci sono in ogni bucket 
+ // n è il numero di buckets
  int* division_bucket(double* A,size_t n){
 	 int* ris = empty_vector(n);
      for(int j = 0; j<n;j++){
@@ -84,7 +86,8 @@ void double_insertion_sort(double* A,size_t n){
 
 
 void bucket_sort(double* A,size_t n){
-    int* p = division_bucket(A,n); // serve per allocare meno memoria possibile
+    int* p = division_bucket(A,n); // serve per allocare meno memoria possibile--> questo è un array che contiene quanti elementi ha ogni bucket
+    // temp rappresenta l'insieme dei bucket vero e proprio
     double **temp=(double **)malloc(sizeof(double**)*n);
     for (size_t i = 0; i<n;i++){temp[i] = (double *)malloc(sizeof(double*)*p[i]);}
     for(size_t i = 0; i<n; i++){

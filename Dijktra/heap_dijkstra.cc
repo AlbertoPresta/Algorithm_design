@@ -16,7 +16,7 @@ La mia classe heap sarà formata:
     -da una variabile int size = numero di min_heap_nodes presenti nella heap al momento
     -int capacity = capacità della heap (data all'inizio)
     -un array di interi int* pos -> salva le posizioni dei nodi nella heap (serve per il decrease key)
-    -u narray di min_heap_node dove si salvano i veri e propri nodi della heap 
+    -un array di min_heap_node dove si salvano i veri e propri nodi della heap 
 
 Si sfrutta quindi una struct ausiliaria che rappresenta il singolo nodo--> questa struct si chiama min_heap_node  e ha come variabili:
     -int vert -> indica il vertice salvato del nodo 
@@ -95,7 +95,7 @@ void minheapify(int i){
     if(smallest!=i){
         min_heap_node smallestnode = this->array[smallest];
         min_heap_node idxnode = this->array[i];
-        // scambiare le posizioni
+        // scambiare le posizioni nel vettore pos
         this->pos[smallestnode.vert] = i;  
         this->pos[idxnode.vert] = smallest;
         swap(i,smallest);
@@ -179,11 +179,12 @@ void decreaseKey(int v,int dist){
  /*
 il nostro grafo avrà come variabili:
     - un intero int v che rappresenta il numero di vertici 
-    - una lista di adiacenza, la quale è rappresentata da un pointer.
+    - una lista di adiacenza, la quale è rappresentata da un array di  pointer.
+    - un booleano per sapere se il nostro grafo è diretto o no
     -ogni nodo della lista è rappresentato dalla struct adjlistnode, la quale ha le seguenti variabili:
             -int dest ->prossimo vertice
-            -int weight -> peso dell+arco
-            -pointer al porssimo nodo 
+            -int weight -> peso dell'arco
+            -pointer al prossimo nodo della lista di adiacenza relativo allo stesso src 
 
 
 
@@ -196,7 +197,7 @@ il nostro grafo avrà come variabili:
 struct adjlistnode {
     int dest; // vertice prossimo
     int weight; // peso dell'edge
-    struct adjlistnode* next;
+    struct adjlistnode* next; // punta al nodo successivo della lista di adiacenza relativo allo stesso src
 };
 
 // una funzione che mi crei un nuovo nodo della lista di adiacenza
@@ -223,15 +224,15 @@ struct adjlistnode* newadjlistnode(int dest,int weight){
 // questa struct rappresenta la lista
 struct adjlist 
 { 
-    struct adjlistnode *head;  // pointer to head node of list 
+    struct adjlistnode *head;  // pointer alla testa della lista di adiacenza relativa ad un nodo 
 }; 
 
 // vera e propria struct graph, con il metodo addedge 
 
 struct graph{
 
-    int v; // numeber of vertices
-    struct adjlist*  array; // la nostra lista di adiacenza 
+    int v; // numero di vertici 
+    struct adjlist*  array; // la nostra lista di adiacenza : un array di puntatori alla testa delle liste di adiacenza
     bool direct; // se è true---> grafo è diretto, altrimento è indiretto
     graph(int v,bool b): v{v}, direct{b}{
         // allochiamo memoria per l'array di liste di adiacenza
@@ -244,7 +245,7 @@ struct graph{
         // aggiungiamo un arco da src a dest. un nodo viene aggiunto alla lista di adiacenza of src
         // il nodo viene aggiunto all'inizio
         struct adjlistnode* newnode = newadjlistnode(dest,weight);
-        newnode->next = this->array[src].head;
+        newnode->next = this->array[src].head; // attacchiamo questo nodo alla lista di adiacenza 
         this->array[src].head = newnode;
 
         // se il grafo è indiretto 
@@ -274,6 +275,8 @@ void dijkstra(struct graph graph,int src){
     int *pos = (int*)malloc(V*sizeof(int));
         for(int i =0;i<V;i++){pos[i]=0;}
     min_heap hp{V,V,ar,pos};
+    
+    // inizializzazione della heap
     for(int v =0;v<V;v++){
         dist[v]=INT_MAX;
         min_heap_node temp{v,dist[v]};
@@ -312,7 +315,7 @@ void dijkstra(struct graph graph,int src){
         }
     }
     
-
+    //printarray(dist,V);
 }
 
 

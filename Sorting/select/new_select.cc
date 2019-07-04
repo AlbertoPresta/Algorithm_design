@@ -53,7 +53,7 @@ void quicksort(int* A,int l,int r){
 	}
 }
 	
-int partition_select(int* A,size_t l,size_t r,int m){ // pivot= A[l]
+int partition_select(int* A,size_t l,size_t r,int m){ // pivot= A[m]
     switch_el(A,l,m); // metto il pivot all'inizio e poi procedo normalmente con il partition
     int pivot = A[l];
     size_t i = l+1;
@@ -69,13 +69,13 @@ int partition_select(int* A,size_t l,size_t r,int m){ // pivot= A[l]
 	return j; // nuova posizione del pivot
 }
 
-int best_pivot(int* A,int l,int r){ // N grande è la dimensione totale
+int best_pivot(int* A,int l,int r){ 
 	    
         int len = r-l;
-        int chunks = len/10 + 1;
+        int chunks = len/10 + 1;  // 10 chuncks 
 		
-        // caso in cui ol nostro array sia più piccolo di 10
-        if(len +1<=10){
+        // caso in cui il nostro array sia più piccolo di 10
+        if(len + 1<=10){
             quicksort(A,l,r);
             return (l+r)/2;
         }
@@ -83,20 +83,20 @@ int best_pivot(int* A,int l,int r){ // N grande è la dimensione totale
 //        
         int counter = l + 9;
         while(counter < r -10){
-            quicksort(A,counter-9,counter);
-            if(counter+10>=r-10){counter=r;}
+            quicksort(A,counter-9,counter); // riordiniamo la parte di array relativa ad un singolo chunk 
+            if(counter+10>=r-10){counter=r;} // se l'ultimo chunck è più piccolo di 10--> allora lo settiamo ad r 
             else{counter+=10;}
         }
-        // trovare la mediana su ogni chunk e spostarla all'inizio di ogni array
+        // trovare la mediana su ogni chunk e la sposto sul primo chunk 
         int j = l+10;
         for(int i=l;i<chunks;i++){
-            switch_el(A,i,(j+i*10)/2);
+            switch_el(A,i,(j+i*10)/2); 
             if(j+10>=r){j=r;}
             else{j+=10;}
         }
         int res;
-        // continuo finchè non rimane un solo chunck
-        res = best_pivot(A,l,l+chunks);
+        
+        res = best_pivot(A,l,l+chunks); // trovo il best pivot sul primo chunk (la funzione finirà dentro il primo if)
         return res;
         
     }

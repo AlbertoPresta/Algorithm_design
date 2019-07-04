@@ -50,7 +50,7 @@ void double_insertion_sort(double* A,size_t n){
  
  
  // funzione che mi restituisce il numero di elementi che ci sono in ogni bucket 
- // n è il numero di buckets
+ // n è il numero di buckets e anche la dimensione dell'array
  int* division_bucket(double* A,size_t n){
 	 int* ris = empty_vector(n);
      for(int j = 0; j<n;j++){
@@ -95,12 +95,12 @@ void bucket_sort(double* A,size_t n){
     }
    int* indici = empty_vector(n); // array che mi serve per l'inserimento del bucket
     for (size_t i = 0; i<n; i++){
-        size_t  k = (int)(A[i]*n);
+        size_t  k = (int)(A[i]*n);  // trovare il bucket giusto ! 
         temp[k][indici[k]] = A[i];
-        indici[k] = indici[k] + 1;
+        indici[k] = indici[k] + 1; // faccio l'update dell'indice relativo all k-esimo bucket
         
     }
-    for (size_t i = 0; i<n; i++){double_insertion_sort(temp[i],p[i]);}
+    for (size_t i = 0; i<n; i++){double_insertion_sort(temp[i],p[i]);} // ordino ogni bucket 
     // buttare tutto dentro A
     size_t i = 0;
     for(size_t j = 0; j<n; j++){
